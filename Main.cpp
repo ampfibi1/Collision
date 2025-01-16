@@ -26,7 +26,7 @@ int main() {
 
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) window.close();
 		
-		player.update(checkCollision);
+		player.update(checkCollision,enemy);
 		enemy.update(checkCollision);
 		checkCollision = Math::collisionDetector(player, enemy);
 		

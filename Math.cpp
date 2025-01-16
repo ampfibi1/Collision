@@ -19,3 +19,10 @@ bool Math::collisionDetector(Player p, Enemy e)
 		return f;
 	
 }
+
+//sf::Vector2f Math::normalization(sf::Vector2f dir)
+//{
+//	float mag = sqrt(dir.x * dir.x + dir.y * dir.y); 
+//	if (!mag) return sf::Vector2f(0, 0);
+//	return dir/mag;
+//}
