@@ -1,6 +1,5 @@
 #pragma once
 #include"Enemy.h"
-//#include"Math.h"
 
 class Player
 {
@@ -16,7 +15,7 @@ private:
 public:
 	void initialize();
 	void load();
-	void update(bool checkCollision,Enemy enemy);
+	void update(bool checkCollision,Enemy &enemy);
 	void draw(sf::RenderWindow &window);
 	sf::Vector2f getPosition();
 };

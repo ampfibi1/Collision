@@ -13,7 +13,7 @@ bool Math::collisionDetector(Player p, Enemy e)
 			(epos.x < ppos.x + playerSize && epos.x + enemySize > ppos.x) &&
 			(epos.y < ppos.y + playerSize && epos.y + enemySize > ppos.y)
 			) {
-			std::cout << "Collision.\n";
+			std::cout << "Player And Enemy Collision.\n";
 			f = true;
 		}
 		return f;
