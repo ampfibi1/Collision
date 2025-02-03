@@ -1,13 +1,13 @@
 #include "player.h"
-#include<iostream>
-#include<vector>
 
-sf::Vector2f Player::normalization(sf::Vector2f dir)
+Player::Player() : player_speed(1000.f)
 {
-	float mag = sqrt(dir.x * dir.x + dir.y * dir.y);
-	if (!mag) return sf::Vector2f(0, 0);
-	return dir / mag;
 }
+
+Player::~Player() 
+{
+}
+
 void Player::initialize()
 {
 	//std::cout << "Shape Type : "; std::cin >> shape; 
@@ -23,44 +23,37 @@ void Player::load()
 	player.setOrigin(30,30);
 }
 
-void Player::update(bool checkCollision,Enemy &enemy)
+void Player::update(bool checkCollision,Enemy &enemy, sf::Vector2f& mouse_pos, float delta_time)
 {
 	position = player.getPosition(); 
-	/*if (checkCollision) {
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) position.x-=50;
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) position.x+=50;
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) position.y+=50;
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) position.y-=50;
-	}
-	else*/{
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) position.x++;
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) position.x--;
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) position.y--;
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) position.y++;
+	{
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) position.x+= (delta_time * player_speed);
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) position.x-= (delta_time * player_speed);
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) position.y-= (delta_time * player_speed);
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) position.y+= (delta_time * player_speed);
 	}
 	player.setPosition(position);
 
-	//generate bullets and set time clock
+
 	if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
-		if (clock.getElapsedTime().asSeconds()> .1f) {
-			bullets.push_back(sf::CircleShape(10.f));
-			bullets[bullets.size() - 1].setPosition(position);
-			bullets[bullets.size() - 1].setFillColor(sf::Color::Cyan);
+		if (clock.getElapsedTime().asSeconds() > .1f) {
+			bulletss.push_back(Bullet());
+
+			int i = bulletss.size() - 1 ;
+
+			bulletss[i].initialize(position, mouse_pos);
 			clock.restart();
 		}
 	}
-	//set bullets possition each frame 
-	for (int i = 0; i < bullets.size(); ++i) {
-		bulletDirection = enemy.getPosition()-bullets[i].getPosition();
-		bulletDirection = normalization(bulletDirection);
-		bullets[i].setPosition(bullets[i].getPosition()+bulletDirection*.975f);
+	for (int i = 0; i < bulletss.size(); ++i) {
+		bulletss[i].update(delta_time);
 	}
-	//delete bullets after hit the target
-	for (int i = 0; i < bullets.size(); ++i) {
-		sf::Vector2f d = enemy.getPosition()-bullets[i].getPosition();
-		float mag = sqrt(d.x * d.x + d.y * d.y);
-		if (mag < 5.f) {
-			bullets.erase(bullets.begin() + i--);
+
+
+	////delete bullets after hit the target
+	for (int i = 0; i < bulletss.size(); ++i) {
+		if (Math::collisionDetector(enemy.getPosition(), bulletss[i].getPosition())) {
+			bulletss.erase(bulletss.begin() + i--);
 			enemy.collapse_with_bullets(true);
 		}
 	}
@@ -68,7 +61,8 @@ void Player::update(bool checkCollision,Enemy &enemy)
 
 void Player::draw(sf::RenderWindow& window)
 {
-	for (auto x : bullets) window.draw(x);
+	//for (auto x : bullets) window.draw(x);
+	for (auto x : bulletss) x.draw(window);
 	window.draw(player);
 }
 

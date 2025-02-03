@@ -1,9 +1,9 @@
 #pragma once
-#include"player.h"
-#include"Enemy.h"
+#include<SFML/Graphics.hpp>
+
 class Math
 {
 public:
-	static bool collisionDetector(Player p, Enemy e);
-	//static sf::Vector2f normalization(sf::Vector2f dir);
+	static bool collisionDetector(sf::Vector2f p, sf::Vector2f e);
+	static sf::Vector2f normalization(sf::Vector2f dir);
 };
